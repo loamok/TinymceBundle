@@ -68,7 +68,7 @@ class StfalconTinymceExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'tinymce_init' => new \Twig_Function_Method($this, 'tinymceInit', array('is_safe' => array('html')))
+            'tinymce_init' => new \Twig_SimpleFunction('tinymce_init', array($this, 'tinymceInit'), array('is_safe' => array('html')))
         );
     }
 
@@ -80,9 +80,7 @@ class StfalconTinymceExtension extends \Twig_Extension
      */
     public function tinymceInit($options = array())
     {
-        $config = $this->getParameter('stfalcon_tinymce.config');
-        $config = array_merge_recursive($config, $options);
-
+        $config  = $this->getParameter('stfalcon_tinymce.config');
         $this->baseUrl = (!isset($config['base_url']) ? null : $config['base_url']);
 
         #ASSET PACKAGE NAME
@@ -122,8 +120,8 @@ class StfalconTinymceExtension extends \Twig_Extension
 
         // If the language is not set in the config...
         if (!isset($config['language']) || empty($config['language'])) {
-            // get it from the request
-            $config['language'] = $this->getService('request')->getLocale();
+            // get it from the session
+            $config['language'] = $this->getService('session')->getLocale();
         }
 
         $config['language'] = LocaleHelper::getLanguage($config['language']);
